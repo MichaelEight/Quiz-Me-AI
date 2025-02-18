@@ -48,6 +48,8 @@ export default function SettingsPage() {
                 />
             </label>
 
+            {/* TODO: Add setting determining difficulty of all/part of questions */}
+
             <button onClick={() => navigate('/input')}>Next</button>
         </div>
     );
