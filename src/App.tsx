@@ -1,10 +1,8 @@
-import { useState } from 'react'
-import './App.css'
-import { settingsStore } from './store'
+import { Routes, Route, NavLink } from 'react-router-dom'
 import SettingsPage from './SettingsPage'
 import InputPage from './InputPage'
 import QuizPage from './QuizPage'
-import { Routes, Route, NavLink } from 'react-router-dom'
+import './App.css'
 
 function App() {
   return (

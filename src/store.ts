@@ -11,5 +11,5 @@ export const settingsStore = create((set) => ({
     },
 
     updateSettings: (newSettings) =>
-        set((state) => ({settings: {...state.settings, newSettings}})),
+        set((state) => ({settings: {...state.settings, ...newSettings}})),
 }));
