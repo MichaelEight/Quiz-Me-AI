@@ -9,9 +9,11 @@ function App() {
     <>
       <h1>Quiz Me AI</h1>
 
+      <div>
       <NavLink to="/" end>Settings</NavLink>
       <NavLink to="input" end>Input</NavLink>
       <NavLink to="quiz" end>Quiz</NavLink>
+      </div>
       
       <Routes>
         <Route index element={<SettingsPage />} />
