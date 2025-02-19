@@ -1,23 +1,28 @@
 import { useNavigate } from 'react-router-dom';
 import { settingsStore } from './store';
+import SettingsState from './SettingsState';
 
 export default function SettingsPage() {
     const navigate = useNavigate();
 
     const closedQuestionsAmount = settingsStore(
-        (state) => state.settings.closedQuestionsAmount,
+        (state: SettingsState) => state.settings.closedQuestionsAmount,
     );
     const openQuestionsAmount = settingsStore(
-        (state) => state.settings.openQuestionsAmount,
+        (state: SettingsState) => state.settings.openQuestionsAmount,
     );
     const updateSettings = settingsStore((state) => state.updateSettings);
 
-    const onClosedQuestionsAmountChange = (e) => {
-        updateSettings({ closedQuestionsAmount: e.target.value });
+    const onClosedQuestionsAmountChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        updateSettings({ closedQuestionsAmount: Number(e.target.value) });
     };
 
-    const onOpenQuestionsAmountChange = (e) => {
-        updateSettings({ openQuestionsAmount: e.target.value });
+    const onOpenQuestionsAmountChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        updateSettings({ openQuestionsAmount: Number(e.target.value) });
     };
 
     return (
