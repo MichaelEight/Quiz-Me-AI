@@ -1,42 +1,34 @@
 import { useState, useEffect } from 'react';
-import { Answer } from './types';
+import { QuizQuestion, ClosedAnswer } from './types';
 import { useLocation } from 'react-router-dom';
+import { QuizGenerator } from './quizGenerator';
+import { settingsStore } from './store';
 
 export default function QuizPage() {
-    const exampleQuestion = 'Example Question';
-    const exampleAnswers = [
-        { content: 'Answer1', isCorrect: false },
-        { content: 'Answer2', isCorrect: true },
-        { content: 'Answer3', isCorrect: false },
-        { content: 'Answer4', isCorrect: false },
-    ];
-
     const location = useLocation();
 
     const [question, setQuestion] = useState('');
-    const [answers, setAnswers] = useState<Answer[]>([]);
-    const [isClosedQuestion, setIsClosedQuestion] = useState(true);
+    const [answers, setAnswers] = useState<ClosedAnswer[] | null>(null);
 
     useEffect(() => {
         // Generate new answers only if page accessed through "next" button on InputPage
         if (location.state?.nextBtnPressed) {
-            console.log('Accessed from next button');
-            setQuestion(exampleQuestion);
-            setAnswers(exampleAnswers);
-            setIsClosedQuestion(true);
-        } else {
-            console.log('Accessed from Navlink');
+            const { baseText, settings } = settingsStore.getState();
+            const { closedQuestionsAmount, openQuestionsAmount } = settings;
+
+            QuizGenerator.getInstance();
+            if (
+                !QuizGenerator.generateQuestions(
+                    baseText,
+                    closedQuestionsAmount,
+                    openQuestionsAmount,
+                )
+            ) {
+                alert('Failed to generate questions!');
+            }
         }
     }, []);
-
-    // When entered through NEXT button,
-    // Generate N (N = C + O) questions based on input text and settings.
-    // Create a pool of pointers to questions
-    // When user answers the question and goes to next one, remove it
-    // If answer was correct -- do nothing
-    // If answer was incorrect -- add 2 more pointers to random places in a pool
-    //  Note: Change 2 to setting parameter
-
+    
     const handleOnAnswerClick = (e) => {
         const answer = answers.find(
             (answer) => answer.content === e.target.textContent,
@@ -51,15 +43,28 @@ export default function QuizPage() {
     return (
         <>
             <h1>Quiz Page</h1>
-            <p>Q: {question}</p>
-            {isClosedQuestion ? (
-                answers.map((answer) => (
-                    <button key={answer.content} onClick={handleOnAnswerClick}>
-                        {answer.content}
-                    </button>
-                ))
+            {question ? (
+                <>
+                    <p>Q: {question}</p>
+                    {answers ? (
+                        <>
+                            answers.map((answer) => (
+                                <button
+                                    key={answer.content}
+                                    onClick={handleOnAnswerClick}
+                                >
+                                    {answer.content}
+                                </button>
+                            ))
+
+                            <button>Submit Answer</button>
+                        </>
+                    ) : (
+                        <textarea rows={4} cols={40} />
+                    )}
+                </>
             ) : (
-                <textarea rows={4} cols={40} />
+                <p>No questions available!</p>
             )}
         </>
     );

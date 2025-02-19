@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { settingsStore } from './store';
 import SettingsState from './SettingsState';
+import { testGPTAPI } from './gptService';
 
 export default function SettingsPage() {
     const navigate = useNavigate();
@@ -23,6 +24,11 @@ export default function SettingsPage() {
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
         updateSettings({ openQuestionsAmount: Number(e.target.value) });
+    };
+
+    const handleTestGPTAPI = async () => {
+        const response = await testGPTAPI();
+        console.log(`GPT API response: ${response}`);
     };
 
     return (
@@ -56,6 +62,8 @@ export default function SettingsPage() {
             {/* TODO: Add setting determining difficulty of all/part of questions */}
 
             <button onClick={() => navigate('/input')}>Next</button>
+
+            <button onClick={handleTestGPTAPI}>TEST API</button>
         </div>
     );
 }

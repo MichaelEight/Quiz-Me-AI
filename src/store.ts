@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { SettingsState } from './SettingsState';
+import SettingsState from './SettingsState';
 
 export const settingsStore = create<SettingsState>((set) => ({
     baseText: '',
