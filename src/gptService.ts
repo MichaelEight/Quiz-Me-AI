@@ -3,22 +3,40 @@ export const apiGenerateQuestions = async (
     closedQuestionsAmount: number,
     openQuestionsAmount: number,
 ) => {
-    // Prepare prompt -- system (purpose of this GPT)
-    // Prepare prompt -- developer (Qs amount)
-    // Prepare prompt -- user (baseText)
-    // Call GPT API with prompt
+    // Call GPT API, passing args
+    const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/generateQuestions`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                baseText,
+                closedQuestionsAmount,
+                openQuestionsAmount,
+            }),
+        },
+    );
+
     // Receive JSON as answer
-    // Split JSON into array
-    // Return array
+    if (response.ok) {
+        return await response.json();
+    }
+
+    return null;
 };
 
 export const testGPTAPI = async (): Promise<string | null> => {
-    const response = await fetch('http://localhost:5000/api/testGPTAPI', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
+    const response = await fetch(
+        '${import.meta.env.VITE_BACKEND_URL}/api/testGPTAPI',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         },
-    });
+    );
 
     if (response.ok) {
         return await response.json();

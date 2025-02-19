@@ -17,18 +17,35 @@ export default function QuizPage() {
             const { closedQuestionsAmount, openQuestionsAmount } = settings;
 
             QuizGenerator.getInstance();
-            if (
-                !QuizGenerator.generateQuestions(
-                    baseText,
-                    closedQuestionsAmount,
-                    openQuestionsAmount,
-                )
-            ) {
-                alert('Failed to generate questions!');
+            (async () => {
+                if (
+                    !(await QuizGenerator.generateQuestions(
+                        baseText,
+                        closedQuestionsAmount,
+                        openQuestionsAmount,
+                    ))
+                ) {
+                    alert('Failed to generate questions!');
+                    return;
+                }
+            })();
+
+            // TODO: Change it to "first question", since it's loaded only on first load
+            // TODO: Create new handler for next question
+            const nextQuestion: QuizQuestion | null =
+                QuizGenerator.nextQuestion();
+            if (!nextQuestion) {
+                alert('No more questions!');
+                return;
+            }
+
+            setQuestion(nextQuestion.question);
+            if (nextQuestion.answer) {
+                setAnswers(nextQuestion.answer);
             }
         }
     }, []);
-    
+
     const handleOnAnswerClick = (e) => {
         const answer = answers.find(
             (answer) => answer.content === e.target.textContent,
@@ -48,14 +65,14 @@ export default function QuizPage() {
                     <p>Q: {question}</p>
                     {answers ? (
                         <>
-                            answers.map((answer) => (
+                            {answers.map((answer) => (
                                 <button
                                     key={answer.content}
                                     onClick={handleOnAnswerClick}
                                 >
                                     {answer.content}
                                 </button>
-                            ))
+                            ))}
 
                             <button>Submit Answer</button>
                         </>

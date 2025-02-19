@@ -1,24 +1,5 @@
 import { QuizQuestion, ClosedAnswer } from './types';
-
-const exampleClosedQuestion = 'Example Closed Question';
-const exampleAnswers = [
-    { content: 'Answer1', isCorrect: false },
-    { content: 'Answer2', isCorrect: true },
-    { content: 'Answer3', isCorrect: false },
-    { content: 'Answer4', isCorrect: false },
-];
-
-const exampleOpenQuestion = 'Example Open Question';
-
-const exampleClosedQuizQuestion: QuizQuestion = {
-    question: exampleClosedQuestion,
-    answer: exampleAnswers,
-};
-
-const exampleOpenQuizQuestion: QuizQuestion = {
-    question: exampleOpenQuestion,
-    answer: null,
-};
+import { apiGenerateQuestions } from './gptService';
 
 // When entered through NEXT button,
 // Generate N (N = C + O) questions based on input text and settings.
@@ -32,7 +13,6 @@ export class QuizGenerator {
     private static quizQuestionsArray: QuizQuestion[] = [];
 
     private static instance: QuizGenerator | null = null;
-    private readonly promptAskForQuestions = '';
 
     private constructor() {}
 
@@ -47,19 +27,21 @@ export class QuizGenerator {
      *
      * @returns true on success, false on fail
      */
-    public static generateQuestions(
+    public static async generateQuestions(
         baseText: string,
         closedQuestionsAmount: number,
         openQuestionsAmount: number,
-    ): boolean {
+    ): Promise<boolean> {
         // Make an API call to GPT
-        // Receive JSON with array of questions with answers
+        const generatedQuestions = await apiGenerateQuestions(
+            baseText,
+            closedQuestionsAmount,
+            openQuestionsAmount,
+        );
 
-        const exampleQuizQuestionsArray: QuizQuestion[] = [
-            exampleClosedQuizQuestion,
-            exampleOpenQuizQuestion,
-        ];
-        this.quizQuestionsArray = exampleQuizQuestionsArray;
+        if (!generatedQuestions) return false;
+
+        QuizGenerator.quizQuestionsArray = generatedQuestions;
         return true;
     }
 
