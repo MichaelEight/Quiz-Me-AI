@@ -28,7 +28,7 @@ export default function SettingsPage() {
 
     const handleTestGPTAPI = async () => {
         const response = await testGPTAPI();
-        console.log(`GPT API response: ${response}`);
+        console.log('GPT API response:', response);
     };
 
     return (
