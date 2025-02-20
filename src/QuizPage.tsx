@@ -26,7 +26,7 @@ export default function QuizPage() {
                     ))
                 ) {
                     alert('Failed to generate questions!');
-                    return;
+                    return; // FIXME: Handle error outside of async function
                 }
             })();
 
@@ -57,6 +57,19 @@ export default function QuizPage() {
         }
     };
 
+    const handleCheckClicked = () => {
+        // TODO
+        // Check state of answers, which are checked and which are correct
+        // Either show GOOD/FAIL or X out of Y, depending on settings
+        // Disable itself and enable next question btn
+    };
+
+    const handleNextQuestionClicked = () => {
+        // TODO
+        // Load next question
+        // Disable itself and reenable check btn
+    };
+
     return (
         <>
             <h1>Quiz Page</h1>
@@ -74,7 +87,11 @@ export default function QuizPage() {
                                 </button>
                             ))}
 
-                            <button>Submit Answer</button>
+                            <button onClick={handleCheckClicked}>Check</button>
+
+                            <button onClick={handleNextQuestionClicked}>
+                                Next
+                            </button>
                         </>
                     ) : (
                         <textarea rows={4} cols={40} />
